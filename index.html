@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog Emotion Classifier</title>
+</head>
+<body>
+  <h1>Dog Bark Emotion Detector</h1>
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="audio_file" accept=".wav" required>
+    <button type="submit">Predict EmotionLanja</button>
+  </form>
+
+  <h2 id="result"></h2>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      fetch('/predict', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.emotion) {
+          document.getElementById('result').innerText = `Predicted Emotion: ${data.emotion}`;
+        } else {
+          document.getElementById('result').innerText = `Error: ${data.error}`;
+        }
+      })
+      .catch(error => {
+        document.getElementById('result').innerText = `Error: ${error}`;
+      });
+    });
+  </script>
+</body>
+</html>
